@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
+import { CurrentUser } from './current-user.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { LocalAuthGuard } from './local-auth.guard';
@@ -22,8 +23,8 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('/login')
-  async login(@Request() req) {
-    const user = req.user;
+  async login(@CurrentUser() user) {
+    // const user = req.user;
     const { access_token } = await this.authService.login(user);
 
     return {
@@ -51,8 +52,8 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  async getProfile(@Request() req) {
-    const { userId } = req.user;
+  async getProfile(@CurrentUser() user) {
+    const { userId } = user;
     // console.log(`id: `, userId, +userId);
     const profile = await this.userService.findOne(userId);
     return {
