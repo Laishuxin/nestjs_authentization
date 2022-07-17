@@ -1,3 +1,4 @@
+import { hash } from 'src/utils';
 import {
   BaseEntity,
   BeforeInsert,
@@ -5,8 +6,6 @@ import {
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-
-import { hash, genSalt } from 'bcrypt';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -24,7 +23,7 @@ export class User extends BaseEntity {
   @BeforeInsert()
   async setPassword(password: string) {
     password = password || this.password;
-    this.password = await hash(password, await genSalt(10));
+    this.password = await hash(password);
   }
 }
 

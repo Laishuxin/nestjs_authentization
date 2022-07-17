@@ -15,6 +15,7 @@ export class UsersService {
       password: _user.password,
     });
     await user.save();
+    user.password = undefined;
     return user;
   }
 
@@ -24,5 +25,11 @@ export class UsersService {
 
   findOne(id: string | number): Promise<User> {
     return this.usersRepository.findOneBy({ id: +id });
+  }
+
+  findOneByEmail(email: string) {
+    return this.usersRepository.findOneBy({
+      email,
+    });
   }
 }
